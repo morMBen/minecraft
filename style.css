@@ -43,6 +43,19 @@
   .side_bar{
     background: lightblue;
   }
+
+  .side_bar_div_bank:hover{
+    opacity: 0.8;
+    border-style: inset;
+    border-width: thin;
+  }
+  .side_bar_div_bank{
+    background: black;
+  }
+  .death_space{
+    background: lightslategray;
+  }
+
   .top_side_block{
     grid-area: 1 / 1 / 11 /13;
     background: blue;
@@ -54,11 +67,7 @@
     flex-wrap: wrap;
   }
   
-.side_bar:hover{
-  opacity: 0.8;
-  border-style: inset;
-  border-width: thin;
-}
+
 .side_bar:first-child:hover{
   opacity: 1;
   border-style: none;

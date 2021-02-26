@@ -6,30 +6,53 @@ const nav = document.getElementById("navbar");
 const bodyStyle = document.querySelector("body").style;
 //The object invntory for all the divs inside the container
 let objInventory = [];
-//Picking inventory
-let bank = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+//The object invntory for all the divs inside the container
+let navDivInventory = [];
 //Number of tools
-let numOfTools = 5;
+let numOfTools = 3;
+//Number of slots in the bank
+let slotsBankNum = 5;
+//Picking inventory can be or objId or 0 for empty
+let bank = [0];
 //Tools specificatin
 let toolsArr = ['Axe', 'shovel', 'mining', 'hoe', 'sword']
 //The current tool
 let task = null;
 //---ON--set screen size--400px min---//
-setOpeningPage();
 setScreenSize('auto');
 setToolsButtons(numOfTools);
+bankInit();
+setDivsBank(slotsBankNum);
+// setOffGameScreen();
+// setOnOpeningPage();
 
+// setOffOpeningPage();
+// setOnOpeningPage();
+// setScreenSize(1600);
+// setToolsButtons(numOfTools);
 //===========OPENING PAGE==========//
-function setOpeningPage() {
+function setOnOpeningPage() {
     let mainDiv = document.createElement("div");
     mainDiv.classList.add('open');
     mainDiv.style.width = '100vw';
     mainDiv.style.height = '100vh';
     mainDiv.style.position = 'static';
     mainDiv.style.background = 'red';
-    mainDiv.style.display = 'none';
+    mainDiv.style.display = 'absolut';
     document.body.insertAdjacentElement('afterbegin', mainDiv);
 }
+//===========SET OFF================//
+function setOffGameScreen() {
+    container.innerHTML = "";
+    nav.innerHTML = "";
+}
+function setOffOpeningPage() {
+    document.body.firstElementChild.innerHTML = "";
+    document.body.firstElementChild.remove();
+}
+
+//==========POSE GAME===============//
+
 
 //===========NEW GAME SET==========//
 //Fubcion to set new object/div inside the inventory 
@@ -122,6 +145,7 @@ function setSideBar(rows, cols) {
             let sideBlock = document.createElement("div");
             //set class names
             nav.appendChild(sideBlock).className = `nav_row_${i} nav_col_${j}  side_bar`;
+            // addNewDiv(navDivInventory, `${i},${j}`, 'empty_space');
         }
     };
 }
@@ -146,6 +170,7 @@ function setToolButtonStyle(tool, button) {
     button.style.border = 'green solid 1px';
     button.style.margin = '10px';
 }
+//Set the maseage box for the user
 function setUserMessegeBox() {
 
     let userMassgeBox = document.createElement('div');
@@ -158,6 +183,63 @@ function setUserMessegeBox() {
     massgeText.style.width = '100%';
     massgeText.classList.add('massege_text');
     massgeText.textContent = 'Choose tool:';
+}
+//Set the div bank from 1 - 64
+
+function setDivsBank(num) {
+    let numOfDivInBlock = getSizeOfDivsBank(num);
+    let colStartPoint = ((12 - (Math.floor(Math.sqrt(numOfDivInBlock)) + 1)) / 2);
+    let rowStartPoint = ((10 - (Math.floor(Math.sqrt(numOfDivInBlock)) + 1)) / 2);
+    let colEndPoint = 11 - colStartPoint;
+    let rowEndPoint = 9 - rowStartPoint;
+    if (Math.sqrt(numOfDivInBlock) % 2) {
+        colEndPoint -= 1;
+        rowEndPoint -= 1;
+    }
+    let counter = 0;
+    let tempEl = document.querySelector("#navbar").firstElementChild;
+    for (let i = 0; i < 120; i++) {
+        tempEl = tempEl.nextElementSibling;
+        let tempArr = string2Arr(getIdByEl(tempEl));
+        tempArr[0] = Number(tempArr[0]);
+        tempArr[1] = Number(tempArr[1]);
+        // console.log(tempArr);
+        if (tempArr[0] >= rowStartPoint && tempArr[0] <= rowEndPoint && tempArr[1] >= colStartPoint && tempArr[1] <= colEndPoint) {
+            if (counter < num) {
+                getNavBankElByArr(tempArr).classList.add('side_bar_div_bank');
+                addNewDiv(navDivInventory, `${tempArr[0]},${tempArr[1]}`, 'empty_space');
+            } else {
+                getNavBankElByArr(tempArr).classList.add('death_space');
+                addNewDiv(navDivInventory, `${tempArr[0]},${tempArr[1]}`, 'death_space');
+            }
+            counter++;
+        }
+    };
+    //switch to check the size of the 
+    function getSizeOfDivsBank(num) {
+        if (num < 5) {
+            return 4;
+        } else if (num < 10) {
+            return 9;
+        } else if (num < 17) {
+            return 16;
+        } else if (num < 26) {
+            return 25;
+        } else if (num < 37) {
+            return 36;
+        } else if (num < 50) {
+            return 49;
+        } else if (num < 65) {
+            return 64;
+        }
+    }
+}
+//Set the bank to the correct number of slots
+function bankInit() {
+    bank = new Array(slotsBankNum);
+    for (i = 0; i < slotsBankNum; i++) {
+        bank[i] = 0;
+    }
 }
 
 //================GETTERS============//
@@ -174,19 +256,10 @@ function getElByArr(arr) {
     let temp = document.querySelector(`.box_row_${arr[0]}.box_col_${arr[1]}`);
     return temp || -1;
 }
-//Check if the object id = string 'num,num2' hve a specific class true / false
-function objectHasCalss(id, className) {
-    let getObjById = objInventory.find(el => el.objId === id);
-    if (getObjById.tempClass) {
-        return getObjById.tempClass.toString() === className ? true : false;
-    } else {
-        return false;
-    }
-
-}
-//Get object by ID
-function getObjById(objectId) {
-    return objInventory.find(el => el.objId === objectId);
+//Get element from navbar by arr with to numbers
+function getNavBankElByArr(arr) {
+    let temp = document.querySelector(`.nav_row_${arr[0]}.nav_col_${arr[1]}`);
+    return temp || -1;
 }
 //Get element by class name
 function getElByClass(className) {
@@ -200,11 +273,31 @@ function getIdByEl(el) {
     return `${rows},${cols}`;
 }
 //Get bank sum
-function getBankSum() {
-    return bank.reduce((a, b) => a + b);
+function getBankSum() {// לשנות==========----------===========---------
+    return bank.reduce((a, b) => a + (b === 0 ? b : 1));
 }
 
-console.log(getBankSum());
+//***Main obetcts inventory*****//
+//Get object by ID
+function getObjById(objectId) {
+    return objInventory.find(el => el.objId === objectId);
+}
+//Check if the object id = string 'num,num2' hve a specific class true / false
+function objectHasCalss(id, className) {
+    let getObjById = objInventory.find(el => el.objId === id);
+    if (getObjById.tempClass) {
+        return getObjById.tempClass.toString() === className ? true : false;
+    } else {
+        return false;
+    }
+
+}
+//***Nav obetcts inventory*****//
+//Get object by ID
+function getNavObjById(objectId) {
+    return navDivInventory.find(el => el.objId === objectId);
+}
+
 //=========EVENTS==========//
 //The main chack for the container divs
 function divsCheck(el) {
@@ -215,10 +308,6 @@ function divsCheck(el) {
             switch (task) {
                 case 'shovel':
                     whatTheToolPick(objClass, 'shovel', id, 'soil_img', 'Rocky_soil_grass');
-                    // if (objClass === 'soil_img' || objClass === 'Rocky_soil_grass') {
-                    //     deleteClassBoth(id);
-                    //     getBankSum() < bank.length ? task = 'shovel' : task === null;
-                    // }
                     break;
                 case 'Axe':
                     whatTheToolPick(objClass, 'Axe', id, 'wood');
@@ -248,10 +337,15 @@ function divsCheck(el) {
 function whatTheToolPick(currObjClass, tool, id, objClassName, objClassName2 = 0) {
     if (currObjClass === objClassName || currObjClass === objClassName2) {
         deleteClassBoth(id);
+
+        // setClassBothNavObj('4,4', 'cloud');
         getBankSum() < bank.length ? task = tool : task === null;
     }
 }
+function setElInBankArr() {
 
+}
+console.log(bank);
 
 
 //The main chack for the tools buttons
@@ -261,9 +355,8 @@ function chooseButton(el) {
 };
 
 
-
 //================SETTERS============//
-//set class for obj only
+//set class for container obj only
 function setObjClassById(objectId, className) {
     getObjById(objectId).tempClass = className;
 }
@@ -271,7 +364,7 @@ function setObjClassById(objectId, className) {
 function setElclassById(elId, className) {
     getElByArr(string2Arr(elId)).classList.add(className);
 }
-//set class for element and obj
+//set class for element and Main obj and obj
 function setClassBoth(elNObjId, className) {
     setObjClassById(elNObjId, className);
     setElclassById(elNObjId, className);
@@ -289,6 +382,29 @@ function deleteTempClassEl(id) {
 function deleteClassBoth(id) {
     deleteTempClassEl(id);
     deleteTempClassObj(id);
+}
+//*************Navs***************/
+//set class for nav obj only
+function setNavObjClassById(objectId, className) {
+    getNavObjById(objectId).tempClass = className;
+}
+//set Nav class for element only
+function setNavElclassById(elId, className) {
+    getNavBankElByArr(string2Arr(elId)).classList.add(className);
+}
+//set class for element and Main obj and obj
+function setClassBothNavObj(elNObjId, className) {
+    setNavObjClassById(elNObjId, className);
+    setNavElclassById(elNObjId, className);
+}
+//delete class for nav obj only
+function deleteNavTempClassObj(id) {
+    getNavObjById(id).tempClass = undefined;
+}
+//delete class for nav obj and element and obj
+function deleteClassBothNavObj(id) {
+    deleteTempClassEl(id);
+    deleteNavTempClassObj(id);
 }
 
 //===========CHECKS==========//
