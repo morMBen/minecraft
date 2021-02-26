@@ -214,10 +214,28 @@ function divsCheck(el) {
         if (task === 'Axe' || task === 'shovel' || task === 'mining' || task === 'hoe' || task === 'sword') {
             switch (task) {
                 case 'shovel':
-                    if (objClass === 'soil_img' || objClass === 'Rocky_soil_grass') {
-                        deleteClassBoth(id);
-                        getBankSum() < bank.length ? task = 'shovel' : task === null;
-                    }
+                    whatTheToolPick(objClass, 'shovel', id, 'soil_img', 'Rocky_soil_grass');
+                    // if (objClass === 'soil_img' || objClass === 'Rocky_soil_grass') {
+                    //     deleteClassBoth(id);
+                    //     getBankSum() < bank.length ? task = 'shovel' : task === null;
+                    // }
+                    break;
+                case 'Axe':
+                    whatTheToolPick(objClass, 'Axe', id, 'wood');
+                    break;
+
+                case 'Axe':
+                    whatTheToolPick(objClass, 'Axe', id, 'wood');
+                    break;
+
+                case 'mining':
+                    whatTheToolPick(objClass, 'mining', id, 'rock');
+                    break;
+                case 'hoe':
+                    whatTheToolPick(objClass, 'hoe', id, 'tree');
+                    break;
+                case 'sword':
+                    whatTheToolPick(objClass, 'sword', id, 'cloud');
                     break;
             }
         }
@@ -227,6 +245,14 @@ function divsCheck(el) {
 
     // return console.log(task);
 };
+function whatTheToolPick(currObjClass, tool, id, objClassName, objClassName2 = 0) {
+    if (currObjClass === objClassName || currObjClass === objClassName2) {
+        deleteClassBoth(id);
+        getBankSum() < bank.length ? task = tool : task === null;
+    }
+}
+
+
 
 //The main chack for the tools buttons
 function chooseButton(el) {
@@ -272,8 +298,9 @@ function canIDeleteIt(id) {
     let rigth = getObjById(arr2String([arrId[0], Number(arrId[1]) + 1]));
     let top = getObjById(arr2String([Number(arrId[0]) - 1, arrId[1]]));
     let left = getObjById(arr2String([arrId[0], Number(arrId[1]) - 1]));
-    return top && rigth && bottom && left && top.tempClass && rigth.tempClass && bottom.tempClass && left.tempClass ? false : true;
+    return top.tempClass && rigth.tempClass && bottom.tempClass && left.tempClass ? false : true;
 }
+
 
 
 
