@@ -88,6 +88,13 @@
     background-position: center;
     background-size: cover;
   }
+  .soil_grass{
+    background-image: url(/img/Rocky_soil_grass.jpg);
+    border:sienna solid 0.1px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
   .cloud{
     background-image: url(/img/cloud.jpg);
     border:#fff solid 0.1px;

@@ -9,11 +9,11 @@ let objInventory = [];
 //The object invntory for all the divs inside the container
 let navDivInventory = [];
 //Number of tools
-let numOfTools = 3;
+let numOfTools = 5;
 //Number of slots in the bank
-let slotsBankNum = 5;
+let slotsBankNum = 4;
 //Picking inventory can be or objId or 0 for empty
-let bank = [0];
+let bank = [];
 //Tools specificatin
 let toolsArr = ['Axe', 'shovel', 'mining', 'hoe', 'sword']
 //The current tool
@@ -21,7 +21,7 @@ let task = null;
 //---ON--set screen size--400px min---//
 setScreenSize('auto');
 setToolsButtons(numOfTools);
-bankInit();
+
 setDivsBank(slotsBankNum);
 // setOffGameScreen();
 // setOnOpeningPage();
@@ -208,6 +208,7 @@ function setDivsBank(num) {
             if (counter < num) {
                 getNavBankElByArr(tempArr).classList.add('side_bar_div_bank');
                 addNewDiv(navDivInventory, `${tempArr[0]},${tempArr[1]}`, 'empty_space');
+                bank.push([`${tempArr[0]},${tempArr[1]}`, 0]);
             } else {
                 getNavBankElByArr(tempArr).classList.add('death_space');
                 addNewDiv(navDivInventory, `${tempArr[0]},${tempArr[1]}`, 'death_space');
@@ -232,13 +233,6 @@ function setDivsBank(num) {
         } else if (num < 65) {
             return 64;
         }
-    }
-}
-//Set the bank to the correct number of slots
-function bankInit() {
-    bank = new Array(slotsBankNum);
-    for (i = 0; i < slotsBankNum; i++) {
-        bank[i] = 0;
     }
 }
 
@@ -273,9 +267,14 @@ function getIdByEl(el) {
     return `${rows},${cols}`;
 }
 //Get bank sum
-function getBankSum() {// לשנות==========----------===========---------
-    return bank.reduce((a, b) => a + (b === 0 ? b : 1));
+function getBankEmptySpace() {
+    let temp = 0;
+    bank.forEach(el => {
+        return el[1] === 0 ? temp++ : null;
+    })
+    return temp;
 }
+
 
 //***Main obetcts inventory*****//
 //Get object by ID
@@ -303,11 +302,11 @@ function getNavObjById(objectId) {
 function divsCheck(el) {
     let id = getIdByEl(el);
     let objClass = getObjById(id).tempClass;
-    if (objClass && canIDeleteIt(id)) {
+    if (objClass && canIDeleteIt(id) && getBankEmptySpace() > 0) {
         if (task === 'Axe' || task === 'shovel' || task === 'mining' || task === 'hoe' || task === 'sword') {
             switch (task) {
                 case 'shovel':
-                    whatTheToolPick(objClass, 'shovel', id, 'soil_img', 'Rocky_soil_grass');
+                    whatTheToolPick(objClass, 'shovel', id, 'soil_img', 'soil_grass');
                     break;
                 case 'Axe':
                     whatTheToolPick(objClass, 'Axe', id, 'wood');
@@ -334,25 +333,46 @@ function divsCheck(el) {
 
     // return console.log(task);
 };
+
 function whatTheToolPick(currObjClass, tool, id, objClassName, objClassName2 = 0) {
     if (currObjClass === objClassName || currObjClass === objClassName2) {
         deleteClassBoth(id);
-
-        // setClassBothNavObj('4,4', 'cloud');
-        getBankSum() < bank.length ? task = tool : task === null;
+        setElInBankArr(currObjClass);
+        setAllItemInNavDiv();
     }
 }
-function setElInBankArr() {
-
+//set item in the bank of item
+function setElInBankArr(currObjClass) {
+    tempArr = bank.map((el) => {
+        return el[1];
+    })
+    tempArr.unshift(currObjClass);
+    tempArr.pop();
+    bank = bank.map((el, index) => {
+        return [el[0], tempArr[index]];
+    })
+    // console.log(bank);
 }
-console.log(bank);
-
 
 //The main chack for the tools buttons
 function chooseButton(el) {
     let button = el.classList[0];
     task = button;
 };
+//Set all the div in the navbar acording to the current bank
+function setAllItemInNavDiv() {
+
+    bank.forEach(el => {
+        deleteClassBothNavObj(el[0]);
+        if (!(el[1] === 0)) {
+            setClassBothNavObj(el[0], el[1]);
+        } else {
+            setClassBothNavObj(el[0], 'side_bar_div_bank');
+        }
+
+    })
+
+}
 
 
 //================SETTERS============//
@@ -401,11 +421,21 @@ function setClassBothNavObj(elNObjId, className) {
 function deleteNavTempClassObj(id) {
     getNavObjById(id).tempClass = undefined;
 }
+//delete navbar class for element only
+function deleteNavTempClassEl(id) {
+    let el = getNavBankElByArr(string2Arr(id)).className.split(' ');
+    getNavBankElByArr(string2Arr(id)).classList.remove(el[el.length - 1]);
+}
 //delete class for nav obj and element and obj
 function deleteClassBothNavObj(id) {
-    deleteTempClassEl(id);
+    deleteNavTempClassEl(id);
     deleteNavTempClassObj(id);
 }
+// function resetAllDivsInNav() {
+
+// }
+
+
 
 //===========CHECKS==========//
 function canIDeleteIt(id) {
@@ -433,6 +463,7 @@ function canIDeleteIt(id) {
 
 
 
+setClassBoth('2,0', 'soil_grass')
 setClassBoth('8,3', 'cloud')
 setClassBoth('9,3', 'cloud')
 setClassBoth('8,4', 'cloud')
