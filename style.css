@@ -5,12 +5,22 @@
   *{
       margin: 0;
       padding: 0;
+      font-family: monospace;
   }
  
   body{
     overflow-y: hidden;
     justify-content: center;
   }
+  button{
+    border-radius: 3px;
+  }
+  button:hover{
+    border-radius: 5px;
+    border: black 1px solid;
+    transition: all 0.5s;
+  }
+
   #navbar{
       display: grid;
       grid-template-rows: repeat(var(--grid-rows), 1fr);
@@ -36,11 +46,23 @@
   .top_side_block{
     grid-area: 1 / 1 / 11 /13;
     background: blue;
+    display: flex;
+    min-width: 100%;
+    min-height: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
   }
+  
 .side_bar:hover{
   opacity: 0.8;
   border-style: inset;
   border-width: thin;
+}
+.side_bar:first-child:hover{
+  opacity: 1;
+  border-style: none;
+  border-width: none;
 }
 
 
@@ -49,10 +71,57 @@
       border: rgb(173,210,230) solid 1px;
       border-style:solid;
   }
-
-  .grass_img{
-    background-image: url(/img/dbg8qqd-0fb0aced-d05c-4df6-a7c6-b8e04c184ac5.png);
-    border: green solid 1px;
+/* Page imges */
+  .soil_img{
+    background-image: url(/img/Rocky_soil.jpg);
+    border:sienna solid 0.1px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+  .cloud{
+    background-image: url(/img/cloud.jpg);
+    border:#fff solid 0.1px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+  .rock{
+    background-image: url(/img/rock.png);
+    border:dimgrey solid 0.1px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+  .wood{
+    background-image: url(/img/wood.jpg);
+    border:rgb(63, 28, 3) solid 0.1px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+  .tree{
+    background-image: url(/img/tree.jpg);
+    border:green solid 0.1px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
   }
 
-  
+  /* Tools imges */
+  .shovel{
+    background-image: url(/img/shovel.png);
+  }
+  .Axe{
+    background-image: url(/img/Axe.png);
+
+  }
+  .mining{
+    background-image: url(/img/mining.png);
+  }
+  .hoe{
+    background-image: url(/img/hoe.png);
+  }
+  .sword{
+    background-image: url(/img/sword.png);
+  }
