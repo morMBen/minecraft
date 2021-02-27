@@ -56,7 +56,11 @@ function setMainDivOpening() {
     mainDiv.style.alignItems = 'center';
     mainDiv.style.justifyContent = 'center';
     mainDiv.style.flexDirection = 'column';
+    mainDiv.style.backgroundImage = 'url(/img/opening_backgrund.png)';
     document.body.insertAdjacentElement('afterbegin', mainDiv);
+    mainDiv.style.backgroundRepeat = 'no-repeat';
+    mainDiv.style.backgroundPosition = 'center';
+    mainDiv.style.backgroundSize = 'cover';
 }
 function creatButtonsNoStyle() {
     let father = document.querySelector('.open');
@@ -105,37 +109,33 @@ function creatInputNoStyle() {
     input3.setAttribute('placeholder', 'Inventory Size: 4 - 64 blocks');
 }
 //===========OPENING PAGE EVENTS==========//
-
+function resetDefultVal() {
+    task = null;
+    bank = [];
+    gameIsOn = true;
+    navDivInventory = [];
+    numOfTools = 3;
+    slotsBankNum = 4;
+}
 function startNewGame() {
 
     if (settingIsOpen) {
-        task = null;
-        bank = [];
-        gameIsOn = true;
-        navDivInventory = [];
-        numOfTools = 3;
-        slotsBankNum = 4;
         let screenWidth = document.querySelector('.in1');
-        ;
-        Number(screenWidth.value) > 400 ? setScreenSize(Number(screenWidth.value)) : setScreenSize('auto');
-
         let userNumOfTools = document.querySelector('.in2');
-        Number(userNumOfTools.value) > 2 && Number(userNumOfTools.value) < 6 ? setToolsButtons(Number(userNumOfTools.value)) : setToolsButtons(numOfTools);
-        // console.log(Number(screenWidth.value));
-        ;
         let userInventorySize = document.querySelector('.in3');
-        Number(userInventorySize.value) > 3 && Number(userInventorySize.value) < 65 ? setDivsBank(Number(userInventorySize.value)) : setDivsBank(slotsBankNum);
-        // console.log(Number(screenWidth.value));
-        ;
-        setOffOpeningPage();
+
+        if (checkIfAllTheInpusGood(checkIfWidthInputIsNum(screenWidth.value, screenWidth), checkToolsNumInput(userNumOfTools.value, userNumOfTools, 5), checkBankSizeInput(userInventorySize.value, userInventorySize))) {
+            resetDefultVal();
+            Number(screenWidth.value) >= 400 ? setScreenSize(Number(screenWidth.value)) : setScreenSize('auto');
+            Number(userNumOfTools.value) > 2 && Number(userNumOfTools.value) < 6 ? setToolsButtons(Number(userNumOfTools.value)) : setToolsButtons(numOfTools);
+            Number(userInventorySize.value) > 3 && Number(userInventorySize.value) < 65 ? setDivsBank(Number(userInventorySize.value)) : setDivsBank(slotsBankNum);
+            // console.log(Number(screenWidth.value));
+            ;
+            setOffOpeningPage();
+        }
     } else {
         setOffOpeningPage();
-        task = null;
-        bank = [];
-        gameIsOn = true;
-        navDivInventory = [];
-        numOfTools = 3;
-        slotsBankNum = 4;
+        resetDefultVal()
         setScreenSize('auto');
         setToolsButtons(numOfTools);
         setDivsBank(slotsBankNum);
@@ -158,7 +158,15 @@ function openCloseSetting() {
         settingIsOpen = true;
     }
 }
-
+//===========Closing PAGE EVENTS==========//
+function exitToMenu() {
+    let button = document.querySelector('.exit_button');
+    button.addEventListener('click', () => {
+        console.log(button);
+        setOffGameScreen();
+        setOnOpeningPage();
+    })
+}
 
 
 //===========SET OFF================//
@@ -303,13 +311,38 @@ function setUserMessegeBox() {
     let userMassgeBox = document.createElement('div');
     nav.firstElementChild.insertAdjacentElement("afterbegin", userMassgeBox);
     userMassgeBox.style.width = '100%';
+    userMassgeBox.style.height = '2rem';
+    userMassgeBox.style.display = "flex";
+    userMassgeBox.style.justifyContent = "space-evenly";
+    userMassgeBox.style.alignItems = "center";
     userMassgeBox.style.textAlign = 'center';
     userMassgeBox.classList.add('massege_box');
     let massgeText = document.createElement('h2');
     userMassgeBox.insertAdjacentElement("afterbegin", massgeText);
-    massgeText.style.width = '100%';
+    massgeText.style.width = 'auto';
+    massgeText.style.fontWeight = 'bold';
+    massgeText.style.fontWeight = 'bold';
+    massgeText.style.fontSize = '2.2vw'
     massgeText.classList.add('massege_text');
     massgeText.textContent = 'Choose tool:';
+    let menuButton = document.createElement('button');
+    userMassgeBox.insertAdjacentElement("beforeend", menuButton);
+    menuButton.style.fontSize = '2vw'
+    menuButton.style.margin = '1.5rem'
+    menuButton.style.padding = '0.5rem'
+    menuButton.classList.add('exit_button');
+    menuButton.style.fontWeight = 'bold';
+    menuButton.style.background = 'grey';
+    menuButton.style.color = '	#bf0000';
+    menuButton.textContent = 'Exit';
+    menuButton.classList.add('massege_text');
+    exitToMenu();
+    // let teskDisplay = document.createElement('button');
+    // userMassgeBox.insertAdjacentElement("afterbegin", menuButton);
+    // menuButton.style.height = '100%';
+    // menuButton.style.width = '100%';
+    // menuButton.classList.add('massege_text');
+    // menuButton.textContent = 'sdafdfasda';
 }
 //Set the div bank from 1 - 64
 
@@ -648,6 +681,59 @@ function checkIfTheTaskIsItem(task) {
     }
     else { return false; }
 }
+
+
+// ------- check if the width input is a correct number
+function checkIfWidthInputIsNum(v, el) {
+    let temp = v === '' ? '' : Number(v);
+    if (temp === '' || (temp && temp > 400)) {
+        return true;
+    } else {
+        el.value = '';
+        el.setAttribute('placeholder', 'Wrong input!');
+        return false;
+    }
+}
+// ------- check if the number of tools input is a correct number
+function checkToolsNumInput(v1, el1, toolsNum) {
+    let temp = v1 === '' ? '' : Number(v1);
+    if (temp === '' || (temp && temp > 2 && temp <= toolsNum)) {
+        return true;
+    } else {
+        el1.value = '';
+        el1.setAttribute('placeholder', 'Wrong input!');
+        return false;
+    }
+}
+// ------- check if the bank inventory of input is a correct number
+function checkBankSizeInput(v1, el1) {
+    let temp = v1 === '' ? '' : Number(v1);
+    if (temp === '' || (temp && temp > 3 && temp <= 65)) {
+        return true;
+    } else {
+        el1.value = '';
+        el1.setAttribute('placeholder', 'Wrong input!');
+        return false;
+    }
+}
+//cheak if all inputs are good
+function checkIfAllTheInpusGood(check1, check2, check3) {
+    let goodInput = 0;
+    if (check1) {
+        goodInput++;
+    }
+    if (check2) {
+        goodInput++;
+    }
+    if (check3) {
+        goodInput++;
+    }
+    return goodInput === 3 ? true : false;
+}
+
+
+
+
 // function checkIfTheTaskIsON(task) {
 //     if (task === 'soil_grass' || task === 'wood' || task === 'soil_img' || task === 'tree' || task === 'cloud' || task === 'rock' || task === 'Axe' || task === 'shovel' || task === 'mining' || task === 'hoe' || task === 'sword') {
 //         return true;

@@ -61,7 +61,10 @@
 
   .top_side_block{
     grid-area: 1 / 1 / 11 /13;
-    background: blue;
+    background-image: url(/img/sidebar_backgrund.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
     display: flex;
     min-width: 100%;
     min-height: 100%;
