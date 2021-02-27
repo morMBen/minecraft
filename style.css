@@ -41,7 +41,7 @@
   }
   
   .side_bar{
-    background: lightblue;
+    background: black;
   }
 
   .side_bar_div_bank:hover{
@@ -50,7 +50,7 @@
     border-width: thin;
   }
   .side_bar_div_bank{
-    background: black;
+    background: rgb(39, 39, 39);
   }
   .death_space{
     background: lightslategray;
@@ -83,14 +83,14 @@
 /* Page imges */
   .soil_img{
     background-image: url(/img/Rocky_soil.jpg);
-    border:sienna solid 0.1px;
+    border:#8E735E solid 0.1px;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
   }
   .soil_grass{
     background-image: url(/img/Rocky_soil_grass.jpg);
-    border:sienna solid 0.1px;
+    border:#8E735E 0.1px;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;

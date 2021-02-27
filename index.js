@@ -9,27 +9,30 @@ let objInventory = [];
 //The object invntory for all the divs inside the container
 let navDivInventory = [];
 //Number of tools
-let numOfTools = 5;
+let numOfTools = 3;
 //Number of slots in the bank
-let slotsBankNum = 4;
+let slotsBankNum = 34;
 //Picking inventory can be or objId or 0 for empty
 let bank = [];
 //Tools specificatin
 let toolsArr = ['Axe', 'shovel', 'mining', 'hoe', 'sword']
 //The current tool
 let task = null;
+//The current itemOn
+let itemOn = null;
 //---ON--set screen size--400px min---//
-setScreenSize('auto');
+setScreenSize(6000);
 setToolsButtons(numOfTools);
 
 setDivsBank(slotsBankNum);
-// setOffGameScreen();
-// setOnOpeningPage();
+setOffGameScreen();
+setOnOpeningPage();
 
-// setOffOpeningPage();
+setOffOpeningPage();
 // setOnOpeningPage();
-// setScreenSize(1600);
-// setToolsButtons(numOfTools);
+setScreenSize(1600);
+setToolsButtons(numOfTools);
+setDivsBank(slotsBankNum);
 //===========OPENING PAGE==========//
 function setOnOpeningPage() {
     let mainDiv = document.createElement("div");
@@ -124,9 +127,13 @@ function setMainSky(rows, cols) {
             };
             //---ON--set new obj in inventory---//
             addNewDiv(objInventory, `${i},${j}`);
-            if (i > 12) {
+            if (i > 13) {
                 setObjClassById(`${i},${j}`, "soil_img");
                 block.classList.add("soil_img");
+            }
+            if (i === 13) {
+                setObjClassById(`${i},${j}`, "soil_grass");
+                block.classList.add("soil_grass");
             }
         }
     };
@@ -145,7 +152,7 @@ function setSideBar(rows, cols) {
             let sideBlock = document.createElement("div");
             //set class names
             nav.appendChild(sideBlock).className = `nav_row_${i} nav_col_${j}  side_bar`;
-            // addNewDiv(navDivInventory, `${i},${j}`, 'empty_space');
+
         }
     };
 }
@@ -209,10 +216,14 @@ function setDivsBank(num) {
                 getNavBankElByArr(tempArr).classList.add('side_bar_div_bank');
                 addNewDiv(navDivInventory, `${tempArr[0]},${tempArr[1]}`, 'empty_space');
                 bank.push([`${tempArr[0]},${tempArr[1]}`, 0]);
+                tempEl.onclick = function () {
+                    return divsNarbarCheck(this);
+                };
             } else {
                 getNavBankElByArr(tempArr).classList.add('death_space');
                 addNewDiv(navDivInventory, `${tempArr[0]},${tempArr[1]}`, 'death_space');
             }
+
             counter++;
         }
     };
@@ -303,15 +314,11 @@ function divsCheck(el) {
     let id = getIdByEl(el);
     let objClass = getObjById(id).tempClass;
     if (objClass && canIDeleteIt(id) && getBankEmptySpace() > 0) {
-        if (task === 'Axe' || task === 'shovel' || task === 'mining' || task === 'hoe' || task === 'sword') {
+        if (checkIfTheStringIsTool(task) && itemOn === null) {
             switch (task) {
                 case 'shovel':
                     whatTheToolPick(objClass, 'shovel', id, 'soil_img', 'soil_grass');
                     break;
-                case 'Axe':
-                    whatTheToolPick(objClass, 'Axe', id, 'wood');
-                    break;
-
                 case 'Axe':
                     whatTheToolPick(objClass, 'Axe', id, 'wood');
                     break;
@@ -327,12 +334,56 @@ function divsCheck(el) {
                     break;
             }
         }
-    } else {
+    } else if (checkIfTheTaskIsItem(task)) {
+        if (!objClass) {
+            switch (task) {
+                case 'soil_grass':
+                    setClassBoth(id, 'soil_grass');
+                    break;
+                case 'soil_img':
+                    setClassBoth(id, 'soil_img');
+                    break;
+                case 'wood':
+                    setClassBoth(id, 'wood');
+                    break;
+                case 'tree':
+                    setClassBoth(id, 'tree');
+                    break;
+                case 'cloud':
+                    setClassBoth(id, 'cloud');
+                    break;
+                case 'rock':
+                    setClassBoth(id, 'rock');
+                    break;
+            }
+            task = null;
+            itemOn = null;
+        }
+    }
+    else {
         // objClass ? task = objClass : null;
     }
 
     // return console.log(task);
 };
+
+
+//להוציא החוצה ולשים בשמור
+//The main chack for the navbar divs
+function divsNarbarCheck(el) {
+    if (true) {
+        let id = getIdByEl(el);
+        let elementClass = getNavObjById(id).tempClass;
+        if (!(elementClass === 'empty_space') && !(elementClass === 'side_bar_div_bank')) {
+            task = elementClass;
+            itemOn = [id, elementClass];
+            deleteElFromBankArr(id);
+        }
+    }
+    console.log(task);
+}
+
+
 
 function whatTheToolPick(currObjClass, tool, id, objClassName, objClassName2 = 0) {
     if (currObjClass === objClassName || currObjClass === objClassName2) {
@@ -352,6 +403,25 @@ function setElInBankArr(currObjClass) {
         return [el[0], tempArr[index]];
     })
     // console.log(bank);
+}
+function deleteElFromBankArr(id) {
+    let spotInBanktoDelete;
+    bank.forEach((el, index) => {
+        el[0] === id ? spotInBanktoDelete = index : null;
+    })
+    bank[spotInBanktoDelete][1] = 0;
+    tempArr = bank.map((el) => {
+        return el[1];
+    })
+    tempArr = tempArr.sort((a, b) => {
+        if (a === 0) { return 1 }
+        if (b === 0) { return -1 }
+        return 0;
+    })
+    bank = bank.map((el, index) => {
+        return [el[0], tempArr[index]];
+    })
+    setAllItemInNavDiv();
 }
 
 //The main chack for the tools buttons
@@ -446,6 +516,25 @@ function canIDeleteIt(id) {
     let left = getObjById(arr2String([arrId[0], Number(arrId[1]) - 1]));
     return top.tempClass && rigth.tempClass && bottom.tempClass && left.tempClass ? false : true;
 }
+function checkIfTheStringIsTool(task) {
+    if (task === 'Axe' || task === 'shovel' || task === 'mining' || task === 'hoe' || task === 'sword') {
+        return true;
+    }
+    else { return false; }
+}
+function checkIfTheTaskIsItem(task) {
+    if (task === 'soil_grass' || task === 'wood' || task === 'soil_img' || task === 'tree' || task === 'cloud' || task === 'rock') {
+        return true;
+    }
+    else { return false; }
+}
+// function checkIfTheTaskIsON(task) {
+//     if (task === 'soil_grass' || task === 'wood' || task === 'soil_img' || task === 'tree' || task === 'cloud' || task === 'rock' || task === 'Axe' || task === 'shovel' || task === 'mining' || task === 'hoe' || task === 'sword') {
+//         return true;
+//     }
+//     else { false; }
+// }
+
 
 
 
@@ -463,16 +552,20 @@ function canIDeleteIt(id) {
 
 
 
-setClassBoth('2,0', 'soil_grass')
 setClassBoth('8,3', 'cloud')
 setClassBoth('9,3', 'cloud')
 setClassBoth('8,4', 'cloud')
 setClassBoth('9,4', 'cloud')
 setClassBoth('10,4', 'cloud')
 setClassBoth('10,5', 'cloud')
+setClassBoth('10,6', 'cloud')
+setClassBoth('9,6', 'cloud')
+setClassBoth('7,5', 'cloud')
 setClassBoth('9,5', 'cloud')
 setClassBoth('8,5', 'cloud')
-
+setClassBoth('8,6', 'cloud')
+setClassBoth('7,4', 'cloud')
+setClassBoth('9,7', 'cloud')
 setClassBoth('12,13', 'rock')
 setClassBoth('11,13', 'rock')
 setClassBoth('12,14', 'rock')
@@ -501,7 +594,16 @@ setClassBoth('8,19', 'tree')
 setClassBoth('7,19', 'tree')
 setClassBoth('6,19', 'tree')
 setClassBoth('5,19', 'tree')
-setClassBoth('8,18', 'tree')
+setClassBoth('5,17', 'tree')
 setClassBoth('7,18', 'tree')
 setClassBoth('6,18', 'tree')
+setClassBoth('6,22', 'tree')
+setClassBoth('7,22', 'tree')
+setClassBoth('5,22', 'tree')
+setClassBoth('4,21', 'tree')
+setClassBoth('6,23', 'tree')
+setClassBoth('4,20', 'tree')
+setClassBoth('4,19', 'tree')
+setClassBoth('6,17', 'tree')
 setClassBoth('5,18', 'tree')
+setClassBoth('4,18', 'tree')
