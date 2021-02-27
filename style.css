@@ -38,11 +38,14 @@
   .grid-item:hover{
       opacity: 0.8;
       border-style: inset;
+      
   }
+
   
   .side_bar{
     background: black;
   }
+  
 
   .side_bar_div_bank:hover{
     opacity: 0.8;

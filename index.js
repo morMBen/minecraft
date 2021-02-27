@@ -20,34 +20,154 @@ let toolsArr = ['Axe', 'shovel', 'mining', 'hoe', 'sword']
 let task = null;
 //The current itemOn
 let itemOn = null;
+//The game is on - boolean
+let gameIsOn = false;
+//The setting is open? - boolean
+let settingIsOpen = false;
 //---ON--set screen size--400px min---//
+
 setScreenSize(6000);
 setToolsButtons(numOfTools);
-
 setDivsBank(slotsBankNum);
+
 setOffGameScreen();
 setOnOpeningPage();
 
-setOffOpeningPage();
+// setOffOpeningPage();
 // setOnOpeningPage();
-setScreenSize(1600);
-setToolsButtons(numOfTools);
-setDivsBank(slotsBankNum);
+// setScreenSize(7000);
+// setToolsButtons(numOfTools);
+// setDivsBank(slotsBankNum);
 //===========OPENING PAGE==========//
 function setOnOpeningPage() {
+    setMainDivOpening();
+    creatButtonsNoStyle();
+    creatInputNoStyle();
+    document.body.style.width = 'auto';
+}
+function setMainDivOpening() {
     let mainDiv = document.createElement("div");
     mainDiv.classList.add('open');
     mainDiv.style.width = '100vw';
     mainDiv.style.height = '100vh';
     mainDiv.style.position = 'static';
-    mainDiv.style.background = 'red';
-    mainDiv.style.display = 'absolut';
+    mainDiv.style.background = 'black';
+    mainDiv.style.display = 'flex';
+    mainDiv.style.alignItems = 'center';
+    mainDiv.style.justifyContent = 'center';
+    mainDiv.style.flexDirection = 'column';
     document.body.insertAdjacentElement('afterbegin', mainDiv);
 }
+function creatButtonsNoStyle() {
+    let father = document.querySelector('.open');
+    for (let i = 1; i <= 3; i++) {
+        let button = document.createElement("button");
+        let temp = father.appendChild(button);
+        temp.classList.add('openingButton', `btn${i}`);
+        temp.textContent = 'button1';
+        temp.style.width = '30vw';
+        temp.style.fontSize = '3vw';
+        temp.style.marginTop = '10px';
+        temp.style.padding = '5px';
+    }
+    let button1 = document.querySelector('.btn1');
+    let button2 = document.querySelector('.btn2');
+    let button3 = document.querySelector('.btn3');
+    button1.textContent = 'Resume'
+    button2.textContent = 'New Game'
+    button3.textContent = 'Setting'
+    button2.addEventListener('click', () => {
+        startNewGame();
+    })
+    button3.addEventListener('click', () => {
+        openCloseSetting();
+    })
+}
+function creatInputNoStyle() {
+    let father = document.querySelector('.open');
+    for (let i = 1; i <= 3; i++) {
+        let inp = document.createElement("input");
+        father.appendChild(inp);
+        inp.classList.add('openinInput', `in${i}`);
+        inp.textContent = 'inp';
+        inp.setAttribute('type', 'text');
+        inp.style.width = '29vw';
+        inp.style.fontSize = '1.8vw';
+        inp.style.marginTop = '10px';
+        inp.style.padding = '5px';
+        inp.style.visibility = 'hidden';
+    }
+    let input1 = document.querySelector('.in1');
+    input1.setAttribute('placeholder', 'Set Width: number');
+    let input2 = document.querySelector('.in2');
+    input2.setAttribute('placeholder', 'Number Of Tools: 3 - 5');
+    let input3 = document.querySelector('.in3');
+    input3.setAttribute('placeholder', 'Inventory Size: 4 - 64 blocks');
+}
+//===========OPENING PAGE EVENTS==========//
+
+function startNewGame() {
+
+    if (settingIsOpen) {
+        task = null;
+        bank = [];
+        gameIsOn = true;
+        navDivInventory = [];
+        numOfTools = 3;
+        slotsBankNum = 4;
+        let screenWidth = document.querySelector('.in1');
+        ;
+        Number(screenWidth.value) > 400 ? setScreenSize(Number(screenWidth.value)) : setScreenSize('auto');
+
+        let userNumOfTools = document.querySelector('.in2');
+        Number(userNumOfTools.value) > 2 && Number(userNumOfTools.value) < 6 ? setToolsButtons(Number(userNumOfTools.value)) : setToolsButtons(numOfTools);
+        // console.log(Number(screenWidth.value));
+        ;
+        let userInventorySize = document.querySelector('.in3');
+        Number(userInventorySize.value) > 3 && Number(userInventorySize.value) < 65 ? setDivsBank(Number(userInventorySize.value)) : setDivsBank(slotsBankNum);
+        // console.log(Number(screenWidth.value));
+        ;
+        setOffOpeningPage();
+    } else {
+        setOffOpeningPage();
+        task = null;
+        bank = [];
+        gameIsOn = true;
+        navDivInventory = [];
+        numOfTools = 3;
+        slotsBankNum = 4;
+        setScreenSize('auto');
+        setToolsButtons(numOfTools);
+        setDivsBank(slotsBankNum);
+    }
+}
+function openCloseSetting() {
+    let temp = document.querySelector('.in1');
+    if (settingIsOpen) {
+        temp.style.visibility = 'hidden';
+        temp.nextElementSibling.style.visibility = 'hidden';
+        temp.nextElementSibling.nextElementSibling.style.visibility = 'hidden';
+
+        settingIsOpen = false;
+    } else {
+        temp.style.visibility = 'visible';
+
+        temp.nextElementSibling.style.visibility = 'visible';
+        temp.nextElementSibling.nextElementSibling.style.visibility = 'visible';
+
+        settingIsOpen = true;
+    }
+}
+
+
+
 //===========SET OFF================//
 function setOffGameScreen() {
     container.innerHTML = "";
     nav.innerHTML = "";
+    bank = [];
+    task = null;
+    itemOn = null;
 }
 function setOffOpeningPage() {
     document.body.firstElementChild.innerHTML = "";
@@ -552,58 +672,58 @@ function checkIfTheTaskIsItem(task) {
 
 
 
-setClassBoth('8,3', 'cloud')
-setClassBoth('9,3', 'cloud')
-setClassBoth('8,4', 'cloud')
-setClassBoth('9,4', 'cloud')
-setClassBoth('10,4', 'cloud')
-setClassBoth('10,5', 'cloud')
-setClassBoth('10,6', 'cloud')
-setClassBoth('9,6', 'cloud')
-setClassBoth('7,5', 'cloud')
-setClassBoth('9,5', 'cloud')
-setClassBoth('8,5', 'cloud')
-setClassBoth('8,6', 'cloud')
-setClassBoth('7,4', 'cloud')
-setClassBoth('9,7', 'cloud')
-setClassBoth('12,13', 'rock')
-setClassBoth('11,13', 'rock')
-setClassBoth('12,14', 'rock')
-setClassBoth('11,14', 'rock')
-setClassBoth('10,14', 'rock')
-setClassBoth('12,15', 'rock')
-setClassBoth('11,15', 'rock')
-setClassBoth('12,16', 'rock')
+// setClassBoth('8,3', 'cloud')
+// setClassBoth('9,3', 'cloud')
+// setClassBoth('8,4', 'cloud')
+// setClassBoth('9,4', 'cloud')
+// setClassBoth('10,4', 'cloud')
+// setClassBoth('10,5', 'cloud')
+// setClassBoth('10,6', 'cloud')
+// setClassBoth('9,6', 'cloud')
+// setClassBoth('7,5', 'cloud')
+// setClassBoth('9,5', 'cloud')
+// setClassBoth('8,5', 'cloud')
+// setClassBoth('8,6', 'cloud')
+// setClassBoth('7,4', 'cloud')
+// setClassBoth('9,7', 'cloud')
+// setClassBoth('12,13', 'rock')
+// setClassBoth('11,13', 'rock')
+// setClassBoth('12,14', 'rock')
+// setClassBoth('11,14', 'rock')
+// setClassBoth('10,14', 'rock')
+// setClassBoth('12,15', 'rock')
+// setClassBoth('11,15', 'rock')
+// setClassBoth('12,16', 'rock')
 
-setClassBoth('12,20', 'wood')
-setClassBoth('11,20', 'wood')
-setClassBoth('10,20', 'wood')
-setClassBoth('9,20', 'wood')
+// setClassBoth('12,20', 'wood')
+// setClassBoth('11,20', 'wood')
+// setClassBoth('10,20', 'wood')
+// setClassBoth('9,20', 'wood')
 
 
-setClassBoth('8,20', 'tree')
-setClassBoth('7,20', 'tree')
-setClassBoth('6,20', 'tree')
-setClassBoth('5,20', 'tree')
+// setClassBoth('8,20', 'tree')
+// setClassBoth('7,20', 'tree')
+// setClassBoth('6,20', 'tree')
+// setClassBoth('5,20', 'tree')
 
-setClassBoth('8,21', 'tree')
-setClassBoth('7,21', 'tree')
-setClassBoth('6,21', 'tree')
-setClassBoth('5,21', 'tree')
-setClassBoth('8,19', 'tree')
-setClassBoth('7,19', 'tree')
-setClassBoth('6,19', 'tree')
-setClassBoth('5,19', 'tree')
-setClassBoth('5,17', 'tree')
-setClassBoth('7,18', 'tree')
-setClassBoth('6,18', 'tree')
-setClassBoth('6,22', 'tree')
-setClassBoth('7,22', 'tree')
-setClassBoth('5,22', 'tree')
-setClassBoth('4,21', 'tree')
-setClassBoth('6,23', 'tree')
-setClassBoth('4,20', 'tree')
-setClassBoth('4,19', 'tree')
-setClassBoth('6,17', 'tree')
-setClassBoth('5,18', 'tree')
-setClassBoth('4,18', 'tree')
+// setClassBoth('8,21', 'tree')
+// setClassBoth('7,21', 'tree')
+// setClassBoth('6,21', 'tree')
+// setClassBoth('5,21', 'tree')
+// setClassBoth('8,19', 'tree')
+// setClassBoth('7,19', 'tree')
+// setClassBoth('6,19', 'tree')
+// setClassBoth('5,19', 'tree')
+// setClassBoth('5,17', 'tree')
+// setClassBoth('7,18', 'tree')
+// setClassBoth('6,18', 'tree')
+// setClassBoth('6,22', 'tree')
+// setClassBoth('7,22', 'tree')
+// setClassBoth('5,22', 'tree')
+// setClassBoth('4,21', 'tree')
+// setClassBoth('6,23', 'tree')
+// setClassBoth('4,20', 'tree')
+// setClassBoth('4,19', 'tree')
+// setClassBoth('6,17', 'tree')
+// setClassBoth('5,18', 'tree')
+// setClassBoth('4,18', 'tree')
