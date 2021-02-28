@@ -15,7 +15,7 @@ let slotsBankNum = 34;
 //Picking inventory can be or objId or 0 for empty
 let bank = [];
 //Tools specificatin
-let toolsArr = ['Axe', 'shovel', 'mining', 'hoe', 'sword']
+let toolsArr = ['Axe', 'shovel', 'hoe', 'mining', 'sword']
 //The current tool
 let task = null;
 //The current itemOn
@@ -44,6 +44,7 @@ function setOnOpeningPage() {
     creatButtonsNoStyle();
     creatInputNoStyle();
     document.body.style.width = 'auto';
+
 }
 function setMainDivOpening() {
     let mainDiv = document.createElement("div");
@@ -77,6 +78,7 @@ function creatButtonsNoStyle() {
     let button1 = document.querySelector('.btn1');
     let button2 = document.querySelector('.btn2');
     let button3 = document.querySelector('.btn3');
+    button1.style.visibility = 'hidden';
     button1.textContent = 'Resume'
     button2.textContent = 'New Game'
     button3.textContent = 'Setting'
@@ -139,6 +141,13 @@ function startNewGame() {
         setScreenSize('auto');
         setToolsButtons(numOfTools);
         setDivsBank(slotsBankNum);
+    }
+
+    if (parseInt(document.body.style.width) > 3000) {
+        setSpace(0, 0);
+        setSpace(30);
+    } else {
+        setSpace(0);
     }
 }
 function openCloseSetting() {
@@ -757,59 +766,84 @@ function checkIfAllTheInpusGood(check1, check2, check3) {
 
 
 
+function setSpace(num) {
+    let num1 = 0;
+    let num2 = Number(num);
+    settTree(arr2String([num1 + 3, num2 + 17]), 7);
+    //Taking Space of seven
+    function settTree(startPoint, y) {
+        let startPointToArr = string2Arr(startPoint);
+        let rowStart = Number(startPointToArr[0]);
+        let colStart = Number(startPointToArr[1]);
+        // console.log(rowStart);
+        for (let i = rowStart + 6; i < rowStart + 10; i++) {
+            setClassBoth(arr2String([i, colStart + 3]), 'wood');
+        }
 
-// setClassBoth('8,3', 'cloud')
-// setClassBoth('9,3', 'cloud')
-// setClassBoth('8,4', 'cloud')
-// setClassBoth('9,4', 'cloud')
-// setClassBoth('10,4', 'cloud')
-// setClassBoth('10,5', 'cloud')
-// setClassBoth('10,6', 'cloud')
-// setClassBoth('9,6', 'cloud')
-// setClassBoth('7,5', 'cloud')
-// setClassBoth('9,5', 'cloud')
-// setClassBoth('8,5', 'cloud')
-// setClassBoth('8,6', 'cloud')
-// setClassBoth('7,4', 'cloud')
-// setClassBoth('9,7', 'cloud')
-// setClassBoth('12,13', 'rock')
-// setClassBoth('11,13', 'rock')
-// setClassBoth('12,14', 'rock')
-// setClassBoth('11,14', 'rock')
-// setClassBoth('10,14', 'rock')
-// setClassBoth('12,15', 'rock')
-// setClassBoth('11,15', 'rock')
-// setClassBoth('12,16', 'rock')
+        let gapY = 2
+        let fullY = y;
+        for (let i = rowStart; i < rowStart + 6; i++) {
+            for (let j = colStart; j < colStart + 7; j++) {
 
-// setClassBoth('12,20', 'wood')
-// setClassBoth('11,20', 'wood')
-// setClassBoth('10,20', 'wood')
-// setClassBoth('9,20', 'wood')
+                if (gapY === 0 || (j - 17 > (fullY - gapY) / 2 - 1 && j - 17 < (fullY - gapY) / 2 + gapY)) {
+                    setClassBoth(arr2String([i, j]), 'tree');
+                }
+            }
+            gapY++;
+        }
+    }
+    //Taking Space of four
+    setClude(arr2String([num1 + 2, num2 + 6]));
+    function setClude(startPoint) {
+        let startPointToArr = string2Arr(startPoint);
+        let rowStart = Number(startPointToArr[0]);
+        let colStart = Number(startPointToArr[1]);
+        for (let i = rowStart, c = 0; i < rowStart + 4; i++) {
+            for (let j = colStart; j < colStart + 5; j++, c++) {
+                if (i === rowStart + 3) {
+                    c + 14;
+                }
+                if (!(c === 0 || c === 4 || c === 15 || c === 19)) {
+                    setClassBoth(arr2String([i, j]), 'cloud');
+                }
+            }
+        }
+    }
+    //Taking Space of four
+    setRock(arr2String([num1 + 10, num2 + 3]));
+    function setRock(startPoint) {
+        let startPointToArr = string2Arr(startPoint);
+        let rowStart = Number(startPointToArr[0]);
+        let colStart = Number(startPointToArr[1]);
+        console.log(rowStart, colStart)
+        for (let i = rowStart, c = 0; i < rowStart + 3; i++) {
+            for (let j = colStart; j < colStart + 4; j++, c++) {
+                if (i === rowStart + 3) {
+                    c + 14;
+                }
+                if (!(c === 0 || c === 3)) {
+                    setClassBoth(arr2String([i, j]), 'rock');
+                }
+            }
+        }
+    }
+    setRock(arr2String([num1 + 10, num2 + 24]));
+    function setRock(startPoint) {
+        let startPointToArr = string2Arr(startPoint);
+        let rowStart = Number(startPointToArr[0]);
+        let colStart = Number(startPointToArr[1]);
+        console.log(rowStart, colStart)
+        for (let i = rowStart, c = 0; i < rowStart + 3; i++) {
+            for (let j = colStart; j < colStart + 4; j++, c++) {
+                if (i === rowStart + 3) {
+                    c + 14;
+                }
+                if (!(c === 0 || c === 3)) {
+                    setClassBoth(arr2String([i, j]), 'rock');
+                }
+            }
+        }
+    }
+}
 
 
-// setClassBoth('8,20', 'tree')
-// setClassBoth('7,20', 'tree')
-// setClassBoth('6,20', 'tree')
-// setClassBoth('5,20', 'tree')
-
-// setClassBoth('8,21', 'tree')
-// setClassBoth('7,21', 'tree')
-// setClassBoth('6,21', 'tree')
-// setClassBoth('5,21', 'tree')
-// setClassBoth('8,19', 'tree')
-// setClassBoth('7,19', 'tree')
-// setClassBoth('6,19', 'tree')
-// setClassBoth('5,19', 'tree')
-// setClassBoth('5,17', 'tree')
-// setClassBoth('7,18', 'tree')
-// setClassBoth('6,18', 'tree')
-// setClassBoth('6,22', 'tree')
-// setClassBoth('7,22', 'tree')
-// setClassBoth('5,22', 'tree')
-// setClassBoth('4,21', 'tree')
-// setClassBoth('6,23', 'tree')
-// setClassBoth('4,20', 'tree')
-// setClassBoth('4,19', 'tree')
-// setClassBoth('6,17', 'tree')
-// setClassBoth('5,18', 'tree')
-// setClassBoth('4,18', 'tree')
