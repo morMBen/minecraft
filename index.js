@@ -10,6 +10,8 @@ let objInventory = [];
 let navDivInventory = [];
 //Number of tools
 let numOfTools = 3;
+//Number of colums
+let screenColums = 0;
 //Number of slots in the bank
 let slotsBankNum = 34;
 //Picking inventory can be or objId or 0 for empty
@@ -143,12 +145,24 @@ function startNewGame() {
         setDivsBank(slotsBankNum);
     }
 
-    if (parseInt(document.body.style.width) > 3000) {
-        setSpace(0, 0);
-        setSpace(30);
-    } else {
-        setSpace(0);
+    for (let i = 0; i < screenColums; i++) {
+        let random = Math.floor(Math.random() * 3);
+        switch (random) {
+            case 0:
+                setClude(arr2String([2, i]));
+                i += 7;
+                break;
+            case 1:
+                setRock(arr2String([10, i]));
+                i += 5;
+                break;
+
+        }
+
     }
+    settTree(arr2String([3, 17]), 7);
+
+
 }
 function openCloseSetting() {
     let temp = document.querySelector('.in1');
@@ -214,6 +228,7 @@ function setScreenSize(num) {
         nav.style.position = "relative";
         //---ON-- set the container divs---//
         setMainSky(20, 30);
+        screenColums = 30;
         //custom screen size case
     } else {
         //The screen is smaller then 1000px
@@ -236,6 +251,7 @@ function setScreenSize(num) {
             bodyStyle.width = `${num}px`;
         }//---ON-- set the container divs---//
         setMainSky(20, (num - num % 40) / 40);
+        screenColums = num - num % 40;
     }//---ON-- set the nav divs---//
     setSideBar(20, 30);
 }
@@ -743,107 +759,79 @@ function checkIfAllTheInpusGood(check1, check2, check3) {
 
 
 
-// function checkIfTheTaskIsON(task) {
-//     if (task === 'soil_grass' || task === 'wood' || task === 'soil_img' || task === 'tree' || task === 'cloud' || task === 'rock' || task === 'Axe' || task === 'shovel' || task === 'mining' || task === 'hoe' || task === 'sword') {
-//         return true;
-//     }
-//     else { false; }
-// }
-
-
-
-
-
-
-
-// deleteTempClassEl('5,3');
-
-
-// console.log(getObjById('5,3'));
-
-
-// deleteClassBoth('5,3');
-
-
-
-function setSpace(num) {
-    let num1 = 0;
-    let num2 = Number(num);
-    settTree(arr2String([num1 + 3, num2 + 17]), 7);
-    //Taking Space of seven
-    function settTree(startPoint, y) {
-        let startPointToArr = string2Arr(startPoint);
-        let rowStart = Number(startPointToArr[0]);
-        let colStart = Number(startPointToArr[1]);
-        // console.log(rowStart);
-        for (let i = rowStart + 6; i < rowStart + 10; i++) {
-            setClassBoth(arr2String([i, colStart + 3]), 'wood');
-        }
-
-        let gapY = 2
-        let fullY = y;
-        for (let i = rowStart; i < rowStart + 6; i++) {
-            for (let j = colStart; j < colStart + 7; j++) {
-
-                if (gapY === 0 || (j - 17 > (fullY - gapY) / 2 - 1 && j - 17 < (fullY - gapY) / 2 + gapY)) {
-                    setClassBoth(arr2String([i, j]), 'tree');
-                }
-            }
-            gapY++;
-        }
+function settTree(startPoint, y) {
+    let startPointToArr = string2Arr(startPoint);
+    let rowStart = Number(startPointToArr[0]);
+    let colStart = Number(startPointToArr[1]);
+    // console.log(rowStart);
+    for (let i = rowStart + 6; i < rowStart + 10; i++) {
+        setClassBoth(arr2String([i, colStart + 3]), 'wood');
     }
-    //Taking Space of four
-    setClude(arr2String([num1 + 2, num2 + 6]));
-    function setClude(startPoint) {
-        let startPointToArr = string2Arr(startPoint);
-        let rowStart = Number(startPointToArr[0]);
-        let colStart = Number(startPointToArr[1]);
-        for (let i = rowStart, c = 0; i < rowStart + 4; i++) {
-            for (let j = colStart; j < colStart + 5; j++, c++) {
-                if (i === rowStart + 3) {
-                    c + 14;
-                }
-                if (!(c === 0 || c === 4 || c === 15 || c === 19)) {
-                    setClassBoth(arr2String([i, j]), 'cloud');
-                }
+
+    let gapY = 2
+    let fullY = y;
+    for (let i = rowStart; i < rowStart + 6; i++) {
+        for (let j = colStart; j < colStart + 7; j++) {
+
+            if (gapY === 0 || (j - 17 > (fullY - gapY) / 2 - 1 && j - 17 < (fullY - gapY) / 2 + gapY)) {
+                setClassBoth(arr2String([i, j]), 'tree');
             }
         }
+        gapY++;
     }
-    //Taking Space of four
-    setRock(arr2String([num1 + 10, num2 + 3]));
-    function setRock(startPoint) {
-        let startPointToArr = string2Arr(startPoint);
-        let rowStart = Number(startPointToArr[0]);
-        let colStart = Number(startPointToArr[1]);
-        console.log(rowStart, colStart)
-        for (let i = rowStart, c = 0; i < rowStart + 3; i++) {
-            for (let j = colStart; j < colStart + 4; j++, c++) {
-                if (i === rowStart + 3) {
-                    c + 14;
-                }
-                if (!(c === 0 || c === 3)) {
-                    setClassBoth(arr2String([i, j]), 'rock');
-                }
+}
+
+
+function setClude(startPoint) {
+    let startPointToArr = string2Arr(startPoint);
+    let rowStart = Number(startPointToArr[0]);
+    let colStart = Number(startPointToArr[1]);
+    for (let i = rowStart, c = 0; i < rowStart + 4; i++) {
+        for (let j = colStart; j < colStart + 5; j++, c++) {
+            if (i === rowStart + 3) {
+                c + 14;
             }
-        }
-    }
-    setRock(arr2String([num1 + 10, num2 + 24]));
-    function setRock(startPoint) {
-        let startPointToArr = string2Arr(startPoint);
-        let rowStart = Number(startPointToArr[0]);
-        let colStart = Number(startPointToArr[1]);
-        console.log(rowStart, colStart)
-        for (let i = rowStart, c = 0; i < rowStart + 3; i++) {
-            for (let j = colStart; j < colStart + 4; j++, c++) {
-                if (i === rowStart + 3) {
-                    c + 14;
-                }
-                if (!(c === 0 || c === 3)) {
-                    setClassBoth(arr2String([i, j]), 'rock');
-                }
+            if (!(c === 0 || c === 4 || c === 15 || c === 19)) {
+                setClassBoth(arr2String([i, j]), 'cloud');
             }
         }
     }
 }
+
+
+function setRock(startPoint) {
+    let startPointToArr = string2Arr(startPoint);
+    let rowStart = Number(startPointToArr[0]);
+    let colStart = Number(startPointToArr[1]);
+    console.log(rowStart, colStart)
+    for (let i = rowStart, c = 0; i < rowStart + 3; i++) {
+        for (let j = colStart; j < colStart + 4; j++, c++) {
+            if (i === rowStart + 3) {
+                c + 14;
+            }
+            if (!(c === 0 || c === 3)) {
+                setClassBoth(arr2String([i, j]), 'rock');
+            }
+        }
+    }
+}
+
+function setRock(startPoint) {
+    let startPointToArr = string2Arr(startPoint);
+    let rowStart = Number(startPointToArr[0]);
+    let colStart = Number(startPointToArr[1]);
+    console.log(rowStart, colStart)
+    for (let i = rowStart, c = 0; i < rowStart + 3; i++) {
+        for (let j = colStart; j < colStart + 4; j++, c++) {
+            if (i === rowStart + 3) {
+                c + 14;
+            }
+            if (!(c === 0 || c === 3)) {
+                setClassBoth(arr2String([i, j]), 'rock');
+            }
+        }
+    }
+}
+// }
 
 
